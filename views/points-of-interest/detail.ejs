@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Ponto de Interesse</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #ede7da; /* Cor de fundo suave para a página */
+      }
+    
+      .card {
+        border: 0; /* Remove bordas do card */
+        border-radius: 0.5rem; /* Arredonda os cantos do card */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra subtil para destacar o card */
+        margin-top: 2rem; /* Espaço extra no topo para melhor visualização */
+      }
+      .card-title,
+      .card-text {
+        color: #333; /* Cor escura para melhor contraste e legibilidade */
+      }
+      .img-fluid {
+        margin-top: 1rem;
+        border-radius: 0.25rem; /* Bordas levemente arredondadas para o QR Code */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra subtil para o QR Code */
+      }
+      .btn-primary {
+        background-color: #981718 !important; /* Muda a cor de fundo */
+        border-color: #981718 !important; /* Muda a cor da borda */
+      }
+      .btn-primary:hover {
+        background-color: #7a1315 !important; 
+        border-color: #7a1315 !important;
+      }
+    
+      .justify-content-end {
+        padding-right: 1rem; /* Ajuste este valor conforme necessário */
+        padding-bottom: 1rem;
+      }
+      h1 {
+        color: #981718; /* Cor que combina com a homepage */
+      }
+    </style>
+  </head>
+  <body class="container py-4">
+    <h1 class="mb-4">Detalhes do Ponto de Interesse</h1>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><%= point.name %></h5>
+        <p class="card-text">Latitude: <%= point.latitude %></p>
+        <p class="card-text">Longitude: <%= point.longitude %></p>
+        <p class="card-text">Descrição: <%= point.description %></p>
+        <% if (point.qrCodeData) { %>
+        <div>
+          <img src="<%= point.qrCodeData %>" alt="QR Code" class="img-fluid" />
+        </div>
+        <% } %>
+      </div>
+      <!-- O botão agora está dentro de uma div com classe d-flex para flexbox e justify-content-start para alinhamento à esquerda -->
+      <div class="d-flex justify-content-end mt-3">
+        <a href="/points-of-interest" class="btn btn-primary"
+          ><i class="fa-solid fa-arrow-left"></i>Voltar</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

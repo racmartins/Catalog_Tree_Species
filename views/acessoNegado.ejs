@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Acesso Negado</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      .access-denied-container {
+        text-align: center;
+        margin-top: 100px;
+      }
+
+      .icon-blocked {
+        font-size: 120px; /* Tamanho do ícone */
+        color: #dc3545; /* Cor vermelha para indicar erro ou proibido */
+        margin-bottom: 20px;
+      }
+
+      .access-denied-container h1 {
+        margin-bottom: 25px;
+      }
+
+      .access-denied-container p {
+        font-size: 18px; /* Um tamanho de fonte maior para se tornar mais claro */
+      }
+
+      .btn-home {
+        background-color: #006400; /* Cor verde para o botão que leva à página inicial */
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .btn-home:hover {
+        background-color: #004d40;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="access-denied-container">
+        <div><i class="bi bi-slash-circle-fill icon-blocked"></i></div>
+        <h1>Acesso Negado</h1>
+        <p>Não tem permissão para aceder a esta página.</p>
+        <a href="/" class="btn-home">Voltar à Página Inicial</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+Criar BD vazia no mongoDB: esas_tree_species_db
+
+correr script: script_cria_admin.js antes de executar a app:
+
+node script_cria_admin.js
+
+As imagens utilizadas para ver em 360º, em vista panorâmica são
+armazenadas no localhost pasta public pois por questões de cors
+alguns sites de alojamento de imagens restringem o acesso a estas
+em 360º.
+
+Na presente versão da app não se encontra concluída a parte de backoffice (gestão ou administração) para vídeos pois apenas se restringiu
+o acesso no servidor (backend) sendo necessário aplicar o ocultar de alguns botões no lado do cliente (frontend). Para pontos de interesse
+é necessário completar as restrições backoffice tanto no server como no client.
+
+Nesta app foi também desenvolvido um controller que trata de implementar
+pesquisa que aplicamos a species.
+
+Foi adicionalmente incluído nos detalhes de espécie um guia de cuidados e plantio.
+
+Acrescentou-se também no index de espécies uma identificação de plantas
+usando a API Plantnet. Aqui restringi o acesso a um ip. Terão que usar
+a vossa própria API em plantnet e criar as vossas definições de acesso.
+
+
+
+

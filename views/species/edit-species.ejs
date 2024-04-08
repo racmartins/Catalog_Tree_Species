@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Espécie</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color:  #ede7da;
+        padding-top: 50px;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      .icon-red {
+        color: #981718;
+      }
+      .btn-cancelar {
+        margin-top: 1rem;
+        background-color: #6c757d; /* Cor cinza para botão cancelar */
+        color: white;
+      }
+      .btn-atualizar {
+        margin-top: 1rem;
+        background-color: #981718; /* Cor verde para botão atualizar */
+        color: white;
+      }
+      .form-label {
+        display: block;
+        margin-top: 1rem;
+      }
+      .form-control {
+        margin-top: 0.5rem;
+      }
+      .button-group {
+        display: flex;
+        justify-content: center; /* Centra os botões */
+        gap: 1rem; /* Espaçamento entre os botões */
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mb-5 text-center icon-red">
+        <i class="fa fa-edit"></i>Editar Espécie
+      </h1>
+      <form action="/species/<%= specie._id %>?_method=PATCH" method="POST">
+        <!-- Nome Científico -->
+        <div class="mb-3">
+          <label for="scientific_name" class="form-label">
+            <i class="fa-solid fa-dna icon-red"></i> Nome Científico
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="scientific_name"
+            name="scientific_name"
+            value="<%= specie.scientific_name %>"
+            required
+          />
+        </div>
+
+        <!-- Nome Comum -->
+        <div class="mb-3">
+          <label for="common_name" class="form-label">
+            <i class="fa-solid fa-users icon-red"></i> Nome Comum
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="common_name"
+            name="common_name"
+            value="<%= specie.common_name %>"
+            required
+          />
+        </div>
+
+        <!-- Descrição -->
+        <div class="mb-3">
+          <label for="description" class="form-label">
+            <i class="fa-solid fa-align-left icon-red"></i> Descrição
+          </label>
+          <textarea
+            class="form-control"
+            id="description"
+            name="description"
+            required
+          >
+<%= specie.description.trim() %></textarea
+          >
+        </div>
+
+        <!-- Habitat -->
+        <div class="mb-3">
+          <label for="habitat" class="form-label">
+            <i class="fa-solid fa-earth-americas icon-red"></i> Habitat
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="habitat"
+            name="habitat"
+            value="<%= specie.habitat %>"
+            required
+          />
+        </div>
+
+        <!-- Características -->
+        <div class="mb-3">
+          <label class="form-label">
+            <i class="fa-solid fa-tree icon-red"></i> Características
+          </label>
+          <!-- Altura -->
+          <input
+            type="text"
+            class="form-control mb-2"
+            placeholder="Altura"
+            name="characteristics[altura]"
+            value="<%= specie.characteristics.altura %>"
+            required
+          />
+          <!-- Diâmetro -->
+          <input
+            type="text"
+            class="form-control mb-2"
+            placeholder="Diâmetro"
+            name="characteristics[diâmetro]"
+            value="<%= specie.characteristics.diâmetro %>"
+            required
+          />
+          <!-- Folhagem -->
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Folhagem"
+            name="characteristics[folhagem]"
+            value="<%= specie.characteristics.folhagem %>"
+            required
+          />
+        </div>
+
+        <!-- URL da Imagem -->
+        <div class="mb-3">
+          <label for="image_url" class="form-label">
+            <i class="fa-solid fa-image icon-red"></i> URL da Imagem
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="image_url"
+            name="image_url"
+            value="<%= specie.image_url %>"
+          />
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn btn-atualizar">
+            <i class="fa-solid fa-check"></i> Atualizar
+          </button>
+          <button
+            type="button"
+            class="btn btn-cancelar"
+            onclick="window.history.back();"
+          >
+            <i class="fa-solid fa-arrow-left"></i> Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

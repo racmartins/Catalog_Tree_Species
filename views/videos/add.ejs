@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar Novo Vídeo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color:  #ede7da; /* Cor de background suave */
+        padding-top: 20px; /* Adiciona algum espaço ao topo */
+      }
+
+      .container {
+        max-width: 900px; /* modificar conforme o tamanho desejado */
+        padding: 2rem;
+        background-color: #fff; /* Cor de fundo para o form */
+        border-radius: 8px; /* Cantos arredondados para o form */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra subtil */
+        margin-top: 1rem; /* Espaço reduzido a partir do topo */
+        margin-bottom: 1rem; /* Espaço a partir do escopo */
+      }
+
+      h3 {
+        color: #981718; /* cor vermelha da homepage */
+        text-align: center; /* Alinha o cabeçalho ao centro */
+        margin-bottom: 1.5rem; /* Espaço abaixo do titulo */
+      }
+
+      .form-label {
+        color: #495057; /* label mais escuro para melhor leitura */
+        display: block; /* Assegura que o label toma o tamanho total */
+        margin-bottom: 0.5rem; /* Espaço entre o label e o input */
+        align-items: center; /* Alinha ícones e texto verticalmente */
+      }
+      .form-label i {
+        margin-right: 0.5rem; /* Espaço entre o ícone e o texto do label */
+      }
+      .form-control,
+      .form-control:focus,
+      textarea.form-control {
+        border-color: #ced4da;
+        box-shadow: none; /* Remove a sombra default do focus */
+      }
+
+      .form-icon {
+        color: #981718; /* Verde Bootstrap */
+      }
+
+      .btn-custom {
+        width: auto; /* Auto baseado no conteúdo */
+        padding: 0.5rem 1rem; /* Padding para o botão */
+        font-size: 1rem; /* Tamanho da fonte para o botão */
+        background-color: #981718; /* Cor vermelha personalizada */
+        border: none;
+        color: white;
+      }
+
+      .btn-custom:hover {
+        background-color: #7a1315; /* vermelho mais escuro no hover */
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h3>
+        <i class="bi bi-camera-video-fill me-2 form-icon"></i>Adicionar Novo
+        Vídeo sobre a Flora
+      </h3>
+      <form action="/videos" method="POST">
+        <div class="mb-3 form-group">
+          <label for="title" class="form-label"
+            ><i class="bi bi-card-heading icon form-icon"></i>Título do
+            Vídeo</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+          />
+        </div>
+        <div class="mb-3 form-group">
+          <label for="description" class="form-label"
+            ><i class="bi bi-textarea-resize icon form-icon"></i
+            >Descrição</label
+          >
+          <textarea
+            class="form-control"
+            id="description"
+            name="description"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="mb-3 form-group">
+          <label for="video_url" class="form-label"
+            ><i class="bi bi-link-45deg icon form-icon"></i>URL do Vídeo</label
+          >
+          <input
+            type="url"
+            class="form-control"
+            id="video_url"
+            name="video_url"
+            required
+          />
+        </div>
+        <div class="mb-3 form-group">
+          <label for="thumbnail_url" class="form-label"
+            ><i class="bi bi-image-fill icon form-icon"></i>URL do
+            Thumbnail</label
+          >
+          <input
+            type="url"
+            class="form-control"
+            id="thumbnail_url"
+            name="thumbnail_url"
+            required
+          />
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-custom">
+            <i class="bi bi-cloud-upload-fill me-2"></i>Adicionar
+          </button>
+          <a href="/videos" class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle-fill me-2"></i>Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

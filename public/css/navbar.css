@@ -1,0 +1,53 @@
+/* Personalização da Navbar */
+.navbar-custom {
+  background-color: #981718; /* Vermelho escuro substitui o verde */
+  border-bottom: 3px solid #9e2324; /* Borda inferior vermelha mais clara */
+}
+.navbar-brand img {
+  height: 30px; /* Altura do logo */
+}
+/* Estilização dos itens da navbar */
+.nav-item .nav-link {
+  color: #ffffff; /* Branco para os itens do link */
+}
+.nav-item .nav-link:hover,
+.nav-item .nav-link:focus {
+  background-color: #9e2324; /* Vermelho ligeiramente mais claro para hover/focus */
+}
+/* Dropdown Menu */
+.dropdown-menu {
+  background-color: #981718; /* Vermelho escuro para o fundo do dropdown */
+}
+.dropdown-item {
+  color: #ffffff; /* Branco para os itens do dropdown */
+}
+.navbar-custom .dropdown-item:hover,
+.navbar-custom .dropdown-item:focus {
+  background-color: #9e2324; /* Vermelho ligeiramente mais claro para hover/focus no dropdown */
+  color: #ffffff; /* Mantém o texto branco */
+}
+.login-register {
+  display: flex;
+  gap: 20px; /* Espaçamento entre Login e Registo */
+  margin-right: 20px; /* Afasta do canto superior direito */
+}
+/* Links de autenticação */
+.login-register .nav-link {
+  color: #ffffff; /* Branco para os textos de login e registro */
+}
+.login-register .nav-link:hover {
+  color: #ede7da; /* Bege claro para hover */
+}
+/* Toggler Icon */
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.1); /* Borda mais clara */
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,..."); /* Caminho para o ícone personalizado */
+}
+/* Ajustes responsivos */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background-color: #981718; /* Vermelho escuro para menus colapsados */
+  }
+}
