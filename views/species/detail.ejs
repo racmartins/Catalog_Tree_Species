@@ -55,7 +55,7 @@
       }
 
       .btn-success:hover {
-        background-color: #7a1315 !important; 
+        background-color: #7a1315 !important;
         border-color: #7a1315 !important;
       }
 
@@ -101,19 +101,19 @@
   <body class="container py-4">
     <div class="img-detail-container">
       <img
-        src="<%= species.image_url ? species.image_url : 'http://localhost:3000/img/img-padrao.jpg' %>"
+        src="<%= species.image_url ? species.image_url : 'https://i.postimg.cc/L5fVQd31/img-padrao.png' %>"
         alt="<%= species.common_name %>"
         class="img-detail"
-        onerror="this.onerror=null;this.src='http://localhost:3000/img/img-padrao.jpg';"
+        onerror="this.onerror=null;this.src='https://i.postimg.cc/L5fVQd31/img-padrao.png';"
       />
     </div>
 
     <div class="detail-container text-center">
       <h1 class="detail-heading mb-4">
-        Detalhes da Espécie: <%= species.common_name %>
+        Nome da Espécie: <%= species.scientific_name%>
       </h1>
       <div class="text-start">
-        <h3 class="mb-3"><%= species.scientific_name %></h3>
+        <h3 class="mb-3"><%= species.common_name%></h3>
         <p><%= species.description %></p>
         <ul class="details-list">
           <li>Altura: <%= species.characteristics.altura %></li>

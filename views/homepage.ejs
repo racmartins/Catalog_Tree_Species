@@ -8,17 +8,23 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Inclui o CSS da Navbar -->
     <link href="/css/navbar.css" rel="stylesheet" />
     <style>
       /* Estilos para a homepage */
       .content-container {
-        margin-top: 60px; /* Espaço para a navbar */
+        margin-top: 150px; /* Espaço para a navbar */
       }
 
       /* Títulos e textos */
       h1 {
-        color: #006400; /* Cor para títulos */
+        color: #981718; /* Cor que combina com a homepage */
+        font-family: "Roboto", sans-serif; /* Aplica a fonte Roboto */
+        font-weight: 700; /* Peso da fonte para títulos mais marcantes */
       }
 
       .lead {
@@ -52,7 +58,7 @@
       }
 
       .btn-primary:hover {
-        background-color: #006400; /* Cor de fundo ao passar o mouse */
+        background-color: #006400; /* Cor de fundo ao passar o rato */
       }
       .btn-success {
         background-color: #981718 !important; /* Muda a cor de fundo */
@@ -60,11 +66,8 @@
       }
 
       .btn-success:hover {
-        background-color: #7a1315 !important; 
+        background-color: #7a1315 !important;
         border-color: #7a1315 !important;
-      }
-      h1 {
-        color: #981718; /* Cor que combina com a homepage */
       }
     </style>
   </head>
@@ -78,11 +81,13 @@
     <div class="content-container">
       <div class="container mt-5 pt-5">
         <header class="text-center mb-5">
-          <h1 style="color: #7a1315">Bem Vindo à página ESAS TREE</h1>
+          <h1 style="color: #7a1315">
+            Bem Vindo à página <br />Jardins da ESAS – Crescer com as árvores
+          </h1>
           <p class="lead">
             Esta página integra um catálogo com os nossos jardins. Poderá
-            visualizar nesta página jardins, espécies de árvores, vídeos e
-            pontos de interesse.
+            visualizar nesta página jardins, biodiversidade, vídeos e pontos de
+            interesse.
           </p>
         </header>
 
@@ -115,13 +120,12 @@
                 alt="Espécies"
               />
               <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Espécies</h5>
+                <h5 class="card-title">Biodiversidade</h5>
                 <p class="card-text">
-                  Conheça as diferentes espécies de árvores dentro dos nossos
-                  jardins.
+                  Conheça a diferente biodiversidade dentro dos nossos jardins.
                 </p>
                 <a href="/species" class="btn btn-success mt-auto"
-                  >Ver Espécies</a
+                  >Ver Biodiversidade</a
                 >
               </div>
             </div>
@@ -166,6 +170,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/navbar.js"></script>
+    <!-- Referencia o arquivo JavaScript -->
+    <script src="navbar.js"></script>
   </body>
 </html>

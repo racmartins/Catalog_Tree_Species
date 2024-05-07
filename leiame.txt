@@ -22,6 +22,10 @@ Acrescentou-se também no index de espécies uma identificação de plantas
 usando a API Plantnet. Aqui restringi o acesso a um ip. Terão que usar
 a vossa própria API em plantnet e criar as vossas definições de acesso.
 
+Basicamente com esta nova versão aprimorou-se o script que cria o administrador e
+mexeu-se no model user, modificou-se também o aspeto da barra de navegação tendo-se dividido em duas áreas.
+Trabalhou-se também no aprimorar geral da app mexendo-se um pouco no CSS.
+
 
 
 

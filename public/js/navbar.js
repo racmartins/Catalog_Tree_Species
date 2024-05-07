@@ -1,9 +1,11 @@
-document.addEventListener("DOMContentLoaded", function () {
-  var navbarHeight = document.querySelector(".navbar").offsetHeight;
-  document.body.style.paddingTop = navbarHeight + "px";
+document.getElementById("menu-toggle").addEventListener("click", function () {
+  var area2 = document.querySelector(".area2");
+  area2.style.display = area2.style.display === "none" ? "block" : "none";
 });
 
-window.onresize = function () {
-  var navbarHeight = document.querySelector(".navbar").offsetHeight;
-  document.body.style.paddingTop = navbarHeight + "px";
-};
+// Inicialmente, o menu deve estar oculto em ecrãs mais pequenos
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.innerWidth <= 768) {
+    document.querySelector(".area2").style.display = "none";
+  }
+});

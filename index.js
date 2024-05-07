@@ -12,6 +12,8 @@ const axios = require("axios");
 const FormData = require("form-data");
 const fs = require("fs");
 
+const cors = require("cors");
+
 const User = require("./models/User");
 const TreeSpecies = require("./models/TreeSpecies");
 const Video = require("./models/Video");
@@ -25,10 +27,13 @@ const isAdmin = require("./middleware/isAdmin");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Ative o CORS para todas as rotas (ajuste conforme a necessidade)
+app.use(cors());
+
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-app.use(express.static('node_modules'));
+app.use(express.static("node_modules"));
 
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
@@ -48,7 +53,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/esas_tree_species_db");
+mongoose.connect("mongodb://localhost:27017/Jardins_Esas_db");
 
 //garante que o user esteja disponível globalmente nas suas views como uma variável local.
 app.use((req, res, next) => {
@@ -71,18 +76,24 @@ app.use((req, res, next) => {
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {
+    console.log("Iniciando a autenticação para o utilizador:", username);
     try {
       const user = await User.findOne({ username });
       if (!user) {
-        return done(null, false, { message: "Usuário não encontrado." });
+        console.log("Utilizador não encontrado:", username);
+        return done(null, false, { message: "Utilizador não encontrado." });
       }
+
       const match = await bcrypt.compare(password, user.password);
       if (match) {
+        console.log("Senha correta para usuário:", username);
         return done(null, user);
       } else {
+        console.log("Senha incorreta para o utilizador:", username);
         return done(null, false, { message: "Senha incorreta." });
       }
     } catch (error) {
+      console.log("Erro durante a autenticação:", error);
       return done(error);
     }
   })
@@ -112,7 +123,6 @@ app.get("/", (req, res) => {
 app.get("/gardens", async (req, res) => {
   try {
     const gardens = await Garden.find();
-    // Não é necessário passar { isAdmin: isAdmin } explicitamente aqui pois foi definido em locals
     res.render("./gardens/index", {
       gardens: gardens,
       activePage: "gardens",
@@ -132,7 +142,6 @@ app.get("/gardens/add", isAdmin, (req, res) => {
 app.post("/gardens", async (req, res) => {
   const { name, longitude, latitude, panoramicImage } = req.body; // Extraia a panoramicImage do corpo da requisição
 
-  // Certifique-se de que longitude e latitude são números
   const coordinates = [parseFloat(longitude), parseFloat(latitude)];
 
   if (isNaN(coordinates[0]) || isNaN(coordinates[1])) {
@@ -147,7 +156,7 @@ app.post("/gardens", async (req, res) => {
         type: "Point",
         coordinates,
       },
-      panoramicImage, // Inclui a panoramicImage ao criar o novo jardim
+      panoramicImage,
     });
     await garden.save();
     res.redirect("/gardens");
@@ -162,7 +171,6 @@ app.get("/gardens/manage", async (req, res) => {
   try {
     const gardens = await Garden.find().populate("trees");
     const trees = await TreeSpecies.find();
-    // Marca árvores que já estão associadas a algum jardim
     const markedTrees = trees.map((tree) => {
       let isInGarden = gardens.some((garden) =>
         garden.trees.some((gardenTree) => gardenTree.equals(tree._id))
@@ -173,8 +181,7 @@ app.get("/gardens/manage", async (req, res) => {
       };
     });
 
-    // Obtém as mensagens de 'flash' para erro e ação
-    const errorMessage = req.flash("error")[0] || ""; // Ajuste aqui para garantir que é uma string
+    const errorMessage = req.flash("error")[0] || "";
     const action = req.flash("action")[0] || "";
 
     res.render("gardens/manage-gardens", {
@@ -190,56 +197,59 @@ app.get("/gardens/manage", async (req, res) => {
   }
 });
 
-// Rota para Mostrar Árvores Disponíveis para Adicionar ao Jardim
-app.get("/gardens/:gardenId/add-trees", async (req, res) => {
-  const { gardenId } = req.params;
-  try {
-    const trees = await TreeSpecies.find();
-    const garden = await Garden.findById(gardenId);
-    res.render("add-trees-to-garden", { trees, garden });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Erro ao carregar árvores para adicionar ao jardim");
-  }
-});
-
-// Rota para Processar Adição de Árvores ao Jardim
+// Rota para adicionar árvores ao jardim
 app.post("/gardens/:gardenId/add-trees", async (req, res) => {
-  const { gardenId } = req.params; // Obtém o ID do jardim da URL
+  const { gardenId } = req.params;
   let { treeIds } = req.body;
   treeIds = Array.isArray(treeIds) ? treeIds : [treeIds];
 
   try {
-    // Filtra árvores que já estão associadas a qualquer jardim
-    const availableTrees = await TreeSpecies.find({
-      _id: { $in: treeIds },
-      garden: { $exists: false },
-    }).select("_id");
-    const availableTreeIds = availableTrees.map((tree) => tree._id);
+    const garden = await Garden.findById(gardenId);
 
-    if (availableTreeIds.length > 0) {
-      await Garden.findByIdAndUpdate(gardenId, {
-        $addToSet: { trees: { $each: availableTreeIds } },
-      });
+    treeIds.forEach((treeId) => {
+      if (!garden.trees.includes(treeId)) {
+        garden.trees.push(treeId);
+      }
+    });
 
-      // Marca as árvores adicionadas como associadas ao jardim
-      await TreeSpecies.updateMany(
-        { _id: { $in: availableTreeIds } },
-        { $set: { garden: gardenId } }
-      );
-
-      res.redirect("/gardens/manage");
-    } else {
-      req.flash("action", "addition"); // Indicativo da ação
-      req.flash(
-        "error",
-        "Todas as árvores selecionadas já estão associadas a jardins."
-      );
-      res.redirect("/gardens/manage");
-    }
+    await garden.save();
+    res.redirect("/gardens/manage");
   } catch (error) {
     console.error("Erro ao adicionar árvores ao jardim:", error);
-    res.status(500).send("Erro ao processar a solicitação.");
+    req.flash("error", "Erro ao adicionar árvores ao jardim.");
+    req.flash("action", "addition");
+    res.redirect("/gardens/manage");
+  }
+});
+
+// Rota para remover árvores do jardim
+app.post("/gardens/:gardenId/remove-trees", async (req, res) => {
+  const { gardenId } = req.params;
+  let { treeIdsToRemove } = req.body;
+
+  if (
+    !treeIdsToRemove ||
+    (Array.isArray(treeIdsToRemove) && treeIdsToRemove.length === 0)
+  ) {
+    req.flash("action", "removal");
+    req.flash("error", "Nenhuma árvore foi selecionada para remoção.");
+    return res.redirect("/gardens/manage");
+  }
+
+  if (!Array.isArray(treeIdsToRemove)) {
+    treeIdsToRemove = [treeIdsToRemove].filter(Boolean);
+  }
+
+  try {
+    await Garden.findByIdAndUpdate(gardenId, {
+      $pull: { trees: { $in: treeIdsToRemove } },
+    });
+    res.redirect("/gardens/manage");
+  } catch (error) {
+    console.error("Erro ao remover árvores:", error);
+    req.flash("action", "removal");
+    req.flash("error", "Erro ao remover árvores. Por favor, tente novamente.");
+    res.redirect("/gardens/manage");
   }
 });
 
@@ -268,7 +278,7 @@ app.post("/gardens/:gardenId/edit", async (req, res) => {
     await Garden.findByIdAndUpdate(gardenId, {
       name,
       location: { type: "Point", coordinates },
-      panoramicImage, // Atualiza o campo panoramicImage no documento do jardim
+      panoramicImage,
     });
     res.redirect("/gardens");
   } catch (error) {
@@ -282,15 +292,12 @@ app.get("/gardens/:gardenId", async (req, res) => {
   const { gardenId } = req.params;
 
   try {
-    // Busca o jardim pelo ID e preenche com as árvores associadas
-    // Certifique-se de que o nome do campo que contém as referências das árvores é 'trees'
     const garden = await Garden.findById(gardenId).populate("trees");
 
     if (!garden) {
       return res.status(404).send("Jardim não encontrado");
     }
 
-    // Renderiza a view 'detail.ejs' passando o objeto garden encontrado
     res.render("./gardens/detail", { garden });
   } catch (error) {
     console.error("Erro ao buscar detalhes do jardim:", error);
@@ -310,39 +317,6 @@ app.post("/gardens/:gardenId/delete", isAdmin, async (req, res) => {
   }
 });
 
-// Rota para remover árvores do jardim
-app.post("/gardens/:gardenId/remove-trees", async (req, res) => {
-  const { gardenId } = req.params;
-  let { treeIdsToRemove } = req.body;
-
-  // Verifica se a lista de IDs de árvores a remover está presente e não está vazia
-  if (
-    !treeIdsToRemove ||
-    (Array.isArray(treeIdsToRemove) && treeIdsToRemove.length === 0)
-  ) {
-    req.flash("action", "removal"); // Indica a ação de remoção para uso potencial na view
-    req.flash("error", "Nenhuma árvore foi selecionada para remoção."); // Mensagem de erro
-    return res.redirect("/gardens/manage"); // Redireciona para a página de gerenciamento geral
-  }
-
-  if (!Array.isArray(treeIdsToRemove)) {
-    treeIdsToRemove = [treeIdsToRemove].filter(Boolean); // Converte para array se não for um
-  }
-
-  try {
-    await Garden.findByIdAndUpdate(gardenId, {
-      $pull: { trees: { $in: treeIdsToRemove } },
-    });
-    req.flash("success", "Árvores removidas com sucesso."); // Mensagem de sucesso
-    res.redirect("/gardens/manage"); // Redireciona para a página de gerenciamento geral
-  } catch (error) {
-    console.error("Erro ao remover árvores:", error);
-    req.flash("action", "removal"); // Indica a ação de remoção para uso potencial na view
-    req.flash("error", "Erro ao remover árvores. Por favor, tente novamente."); // Mensagem de erro
-    res.redirect("/gardens/manage"); // Redireciona para a página de gerenciamento geral
-  }
-});
-
 // Rota para a vista panorâmica de um jardim específico
 app.get("/gardens/:id/panoramic-garden", async (req, res) => {
   try {
@@ -350,7 +324,6 @@ app.get("/gardens/:id/panoramic-garden", async (req, res) => {
     if (!garden) {
       return res.status(404).send("Jardim não encontrado");
     }
-    // Supondo que 'panoramicImage' é o campo onde o URL da imagem está guardado
     const panoramicImageUrl = garden.panoramicImage;
     res.render("gardens/panoramic-garden", { panoramicImageUrl });
   } catch (error) {
@@ -361,16 +334,15 @@ app.get("/gardens/:id/panoramic-garden", async (req, res) => {
 
 // Rota para listar espécies
 app.get("/species", async (req, res) => {
-  let perPage = 9; // Número de itens por página
-  let page = req.query.page || 1; // Página atual
+  let perPage = 9;
+  let page = req.query.page || 1;
 
   try {
-    const totalItems = await TreeSpecies.countDocuments(); // Conta o total de documentos
+    const totalItems = await TreeSpecies.countDocuments();
     const species = await TreeSpecies.find()
       .skip(perPage * page - perPage)
       .limit(perPage);
 
-    // Não precisa mais passar isAdmin aqui, pois está disponível globalmente através de res.locals.isAdmin
     res.render("species/index", {
       species: species,
       current: page,
@@ -399,7 +371,7 @@ app.get("/species/:id", async (req, res) => {
     if (!species) {
       return res.status(404).send("Espécie não encontrada");
     }
-    res.render("species/detail", { species }); // Renderiza a view com os detalhes da espécie
+    res.render("species/detail", { species });
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao procurar a espécie");
@@ -411,7 +383,7 @@ app.post("/species", async (req, res) => {
   try {
     const newSpecies = new TreeSpecies(req.body);
     await newSpecies.save();
-    res.redirect("/species"); // Redireciona para a lista de espécies após a adição
+    res.redirect("/species");
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao adicionar a espécie");
@@ -443,7 +415,7 @@ app.patch("/species/:id", async (req, res) => {
     if (!updatedSpecie) {
       return res.status(404).send("Espécie não encontrada.");
     }
-    res.redirect("/species"); // Ou renderize alguma view específica
+    res.redirect("/species");
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao atualizar a espécie.");
@@ -468,9 +440,7 @@ app.get("/species/delete/:id", isAdmin, async (req, res) => {
 app.get("/videos", async (req, res) => {
   try {
     const videos = await Video.find();
-    // Não é necessário passar isAdmin como variável para a view,
-    // pois ela já está disponível globalmente através de res.locals.isAdmin
-    res.render("./videos/index", { videos, activePage: videos });
+    res.render("./videos/index", { videos, activePage: videos, isAdmin });
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao buscar vídeos.");
@@ -508,7 +478,7 @@ app.put("/videos/:id", async (req, res) => {
     await Video.findByIdAndUpdate(req.params.id, req.body);
     res.redirect("/videos");
   } catch (error) {
-    res.status(500).send(error);
+    res.status[500].send(error);
   }
 });
 
@@ -518,7 +488,7 @@ app.get("/videos/delete/:id", isAdmin, async (req, res) => {
     await Video.findByIdAndDelete(req.params.id);
     res.redirect("/videos");
   } catch (error) {
-    res.status(500).send(error);
+    res.status[500].send(error);
   }
 });
 
@@ -526,14 +496,13 @@ app.get("/videos/delete/:id", isAdmin, async (req, res) => {
 app.get("/points-of-interest", async (req, res) => {
   try {
     const points = await PointOfInterest.find();
-    // Não é necessário passar isAdmin, pois já está disponível através de res.locals
     res.render("points-of-interest/index", {
       points,
       activePage: "points-of-interest",
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Erro ao buscar pontos de interesse.");
+    res.status[500].send("Erro ao buscar pontos de interesse.");
   }
 });
 
@@ -551,25 +520,20 @@ app.post("/points-of-interest", async (req, res) => {
       latitude,
       longitude,
       description,
-      additionalInfo, // Guarda additionalInfo na base de dados
-      // Não definimos ainda o qrCodeData porque precisamos gerá-lo
+      additionalInfo,
     });
 
-    // Combina informações para o texto do QR-Code. Aqui pode personalizar conforme necessário
     const qrCodeText = `Name: ${name}\nLatitude: ${latitude}\nLongitude: ${longitude}\nDescription: ${description}\nAdditional Info: ${additionalInfo}`;
 
-    // Gera QR-Code como Data URL
     const qrCodeData = await QRCode.toDataURL(qrCodeText);
 
-    // Guarda os dados do QR-Code no novo ponto de interesse
     newPoint.qrCodeData = qrCodeData;
     await newPoint.save();
 
-    // Redireciona para a lista de pontos de interesse após a criação
     res.redirect("/points-of-interest");
   } catch (error) {
     console.error("Erro ao guardar o novo ponto de interesse:", error);
-    res.status(500).send("Erro ao adicionar novo ponto de interesse.");
+    res.status[500].send("Erro ao adicionar novo ponto de interesse.");
   }
 });
 
@@ -582,7 +546,7 @@ app.get("/points-of-interest/detail/:id", async (req, res) => {
     }
     res.render("points-of-interest/detail", { point });
   } catch (error) {
-    res.status(500).send(error);
+    res.status[500].send(error);
   }
 });
 
@@ -592,7 +556,7 @@ app.get("/points-of-interest/edit/:id", async (req, res) => {
     const point = await PointOfInterest.findById(req.params.id);
     res.render("points-of-interest/edit", { point });
   } catch (error) {
-    res.status(500).send(error);
+    res.status[500].send(error);
   }
 });
 
@@ -602,19 +566,15 @@ app.put("/points-of-interest/:id", async (req, res) => {
     const { id } = req.params;
     const { name, latitude, longitude, description, additionalInfo } = req.body;
 
-    // Pesquisa o ponto de interesse atual para comparar com additionalInfo
     const currentPoint = await PointOfInterest.findById(id);
 
-    let qrCodeData = currentPoint.qrCodeData; // Assume o valor antigo por padrão
+    let qrCodeData = currentPoint.qrCodeData;
 
-    // Verifica se additionalInfo foi fornecido e é diferente do valor anterior
     if (additionalInfo && additionalInfo !== currentPoint.additionalInfo) {
-      // Gera um novo QR Code
       const qrCodeText = `Name: ${name}\nLatitude: ${latitude}\nLongitude: ${longitude}\nDescription: ${description}\nAdditional Info: ${additionalInfo}`;
-      qrCodeData = await QRCode.toDataURL(qrCodeText); // Uso direto da biblioteca QRCode
+      qrCodeData = await QRCode.toDataURL(qrCodeText);
     }
 
-    // Atualiza o ponto de interesse com novos valores, incluindo o novo QR Code, se gerado
     await PointOfInterest.findByIdAndUpdate(
       id,
       {
@@ -631,7 +591,7 @@ app.put("/points-of-interest/:id", async (req, res) => {
     res.redirect("/points-of-interest");
   } catch (error) {
     console.error("Erro ao atualizar o ponto de interesse:", error);
-    res.status(500).send("Erro ao atualizar o ponto de interesse.");
+    res.status[500].send("Erro ao atualizar o ponto de interesse.");
   }
 });
 
@@ -641,7 +601,7 @@ app.get("/points-of-interest/delete/:id", async (req, res) => {
     await PointOfInterest.findByIdAndDelete(req.params.id);
     res.redirect("/points-of-interest");
   } catch (error) {
-    res.status(500).send(error);
+    res.status[500].send(error);
   }
 });
 

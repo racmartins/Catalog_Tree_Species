@@ -17,7 +17,7 @@
         height: 100vh;
         background-color: #f7f7f7;
       }
-      h2 {
+      h3 {
         position: absolute;
         top: 20px;
         left: 50%;
@@ -33,14 +33,14 @@
     </style>
   </head>
   <body>
-    <h2>Explore o nosso Jardim em 360°</h2>
+    <h3>Explore o nosso Jardim em 360°</h3>
 
     <!-- Incorporação da vista panorâmica -->
     <a-scene embedded style="width: 90%; height: 80vh">
       <a-sky src="<%= panoramicImageUrl %>" rotation="0 -130 0"></a-sky>
     </a-scene>
 
-    <!-- Botão de voltar centralizado na parte inferior -->
+    <!-- Botão de voltar centrado na parte inferior -->
     <button onclick="history.back()" class="btn btn-outline-secondary btn-back">Cancelar</button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

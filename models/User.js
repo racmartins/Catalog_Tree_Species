@@ -9,28 +9,23 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
     match: [/.+\@.+\..+/, "Por favor, insira um endereço de e-mail válido"],
-  }, // Email com validação
-  firstName: { type: String, required: true }, // Novo
-  lastName: { type: String, required: true }, // Novo
-  phone: { type: String, required: true }, // Novo
-  age: { type: Number, required: true }, // Novo
-  address: { type: String, required: true }, // Novo
-  isAdmin: { type: Boolean, default: false }, // Adicionada esta linha
+  },
+  firstName: { type: String, required: true },
+  lastName: { type: String }, // Opcional
+  phone: { type: String }, // Opcional
+  isAdmin: { type: Boolean, default: false },
 });
 
-// Hashing da password antes de guardar o modelo
+// Hash da senha antes de salvar o modelo
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-// Método para comparar as senhas
-UserSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+// Método para comparar senhas
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model("User", UserSchema);

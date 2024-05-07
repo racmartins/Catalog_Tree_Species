@@ -100,7 +100,8 @@
               </div>
               <div class="modal-body">
                 <img
-                  src="<%= tree.image_url ? tree.image_url : url('img/img-padrao.jpg') %>"
+                
+                  src="<%= tree.image_url ? tree.image_url : '/img/img-padrao.jpg' %>"
                   alt="Imagem de <%= tree.common_name %>"
                   onerror="this.onerror=null;this.src='http://localhost:3000/img/img-padrao.jpg';"
                   class="modal-image img-fluid mb-3"

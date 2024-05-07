@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
     <!-- Inclui o CSS da Navbar -->
@@ -21,6 +25,9 @@
     <style>
       body {
         background: #f7f7f7;
+      }
+      .content-container {
+        padding-top: 0px; /* Adiciona espaço acima do conteúdo para não ficar atrás da navbar fixa */
       }
       #map {
         height: 500px;
@@ -63,9 +70,9 @@
         gap: 0.5rem;
       }
       body {
-        padding-top: 70px; /* Aumente o padding-top conforme necessário */
+        padding-top: 150px; /* Aumente o padding-top conforme necessário */
       }
-      h1 {
+      h4 {
         color: #981718; /* Cor que combina com a homepage */
         white-space: nowrap; /* Impede a quebra do título */
       }
@@ -129,7 +136,7 @@
         border-color: #6c757d;
       }
       @media (min-width: 576px) {
-        h1 {
+        h4 {
           font-size: 1.5rem; /* Ajusta o tamanho do título para telas pequenas */
         }
         .list-group-item {
@@ -150,13 +157,15 @@
   </head>
   <body>
     <!-- Inclui o partial da navbar -->
-    <%- include('../partials/navbar') %>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
+      <%- include('../partials/navbar') %>
+    </nav>
 
     <div class="content-container">
       <div class="container my-4">
     <!-- Container flexível para o cabeçalho -->
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4">
-      <h1 class="flex-grow-1" style="white-space: nowrap; color: #981718;">Jardins</h1>
+      <h4 class="flex-grow-1" style="white-space: nowrap; color: #981718;">Jardins</h4>
       <% if (isAdmin) { %>
         <a href="/gardens/add" class="btn btn-success mt-3 mt-sm-0 ms-sm-3">
           <i class="fa-solid fa-seedling"></i> Adicionar Jardim
@@ -166,7 +175,7 @@
         <div id="map"></div>
     
         <!-- Lista de Jardins -->
-        <h2 class="mb-3 text-center" style="color: #7a1315;">Lista de Jardins</h2>
+        <h3 class="mb-3 text-center" style="color: #7a1315;">Lista de Jardins</h2>
         <div class="list-group">
           <% gardens.forEach(garden => { %>
             <div class="list-group-item">
@@ -196,28 +205,31 @@
         </div>
       </div>
     </div>
-    
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var map = L.map('map').setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-        }).addTo(map);
+  var map = L.map('map');
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+  }).addTo(map);
 
-        var bounds = L.latLngBounds();
-        <% gardens.forEach(function(garden) { %>
-            var coordinates = [<%= garden.location.coordinates[1] %>, <%= garden.location.coordinates[0] %>];
-            var marker = L.marker(coordinates).addTo(map)
-                .bindPopup("<%= garden.name %>");
-            bounds.extend(marker.getLatLng());
-        <% }); %>
-        if (bounds.isValid()) {
-            map.fitBounds(bounds);
-        }
-      });
+  var bounds = L.latLngBounds();
+  <% gardens.forEach(function(garden) { %>
+      var coordinates = [<%= garden.location.coordinates[1] %>, <%= garden.location.coordinates[0] %>];
+      var marker = L.marker(coordinates).addTo(map)
+          .bindPopup("<%= garden.name %>");
+      bounds.extend(marker.getLatLng());
+  <% }); %>
+  if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [50, 50] }); // Ajusta o mapa com algum padding para não cortar os marcadores
+  } else {
+      map.setView([0, 0], 2); // Um ponto de vista padrão caso não haja marcadores válidos
+  }
+});
+
     </script>
+    <!-- Referencia o arquivo JavaScript -->
+    <script src="navbar.js"></script>
   </body>
 </html>

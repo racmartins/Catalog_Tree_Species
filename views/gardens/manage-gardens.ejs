@@ -8,19 +8,20 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     />
     <link href="/css/navbar.css" rel="stylesheet" />
-
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
       rel="stylesheet"
     />
   </head>
   <body class="container py-4">
-    <!-- Inclui o partial da navbar -->
     <%- include('../partials/navbar') %>
 
-    <h1 class="text-center" style="color: #981718; margin-top: 70px; margin-bottom:50px">
+    <h3
+      class="text-center"
+      style="color: #981718; margin-top: 70px; margin-bottom: 50px"
+    >
       Gerir Jardins e suas Árvores
-    </h1>
+    </h3>
     <% gardens.forEach(function(garden) { %>
     <div class="card">
       <div class="card-body">
@@ -38,7 +39,6 @@
         <button
           type="button"
           class="btn btn-primary"
-          data-action="addition"
           data-bs-toggle="modal"
           data-bs-target="#addTreesModal<%= garden._id %>"
         >
@@ -48,7 +48,6 @@
         <button
           type="button"
           class="btn btn-warning"
-          data-action="removal"
           data-bs-toggle="modal"
           data-bs-target="#removeTreesModal<%= garden._id %>"
         >
@@ -79,18 +78,16 @@
             ></button>
           </div>
           <div class="modal-body">
-            <!-- Local para a mensagem de erro -->
-            <p id="modalErrorMessage<%= garden._id %>" class="text-danger"></p>
-
             <form action="/gardens/<%= garden._id %>/add-trees" method="POST">
               <% trees.forEach(function(tree) { %>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="<%=
                 tree._id %>" id="tree<%= tree._id %>" name="treeIds" <%=
-                tree.isInGarden ? 'disabled' : '' %> />
+                garden.trees.includes(tree._id) ? 'disabled' : '' %> />
                 <label class="form-check-label" for="tree<%= tree._id %>">
                   <%= tree.common_name %> (<%= tree.scientific_name %>) <%=
-                  tree.isInGarden ? '(Já está num jardim)' : '' %>
+                  garden.trees.includes(tree._id) ? '(Já está no jardim)' : ''
+                  %>
                 </label>
               </div>
               <% }); %>
@@ -127,8 +124,6 @@
             ></button>
           </div>
           <div class="modal-body">
-            <!-- Local para a mensagem de erro -->
-            <p id="modalErrorMessage<%= garden._id %>" class="text-danger"></p>
             <form
               action="/gardens/<%= garden._id %>/remove-trees"
               method="POST"
@@ -157,45 +152,14 @@
         </div>
       </div>
     </div>
-
     <% }); %>
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-
-    <!-- JavaScript para controlo de abertura do modal com base na presença de mensagem de erro -->
-    <% if (errorMessage && action) { %>
-    <script>
-      $(document).ready(function () {
-        // Captura todos os botões que iniciam modais
-        var buttons = $("[data-action]");
-        var targetModalId = "";
-
-        // Itera sobre cada botão para encontrar o correspondente à ação falhada
-        buttons.each(function () {
-          if ($(this).data("action") === "<%= action %>") {
-            targetModalId = $(this).data("bs-target");
-            return false; // Sai do loop assim que encontrar
-          }
-        });
-
-        // Se um ID de modal alvo foi encontrado, exibe o modal com a mensagem de erro
-        if (targetModalId) {
-          var messageContainer = $(targetModalId).find(".text-danger");
-          messageContainer.html("<%= errorMessage %>");
-          $(targetModalId).modal("show");
-        }
-      });
-    </script>
-    <% } %>
-    <!-- Botão Cancelar alinhado à esquerda -->
-    <div class="d-flex justify-content-end" style="margin-top:20px;">
+    <div class="d-flex justify-content-end" style="margin-top: 20px">
       <a href="/gardens" class="btn btn-secondary me-2">
         <i class="fas fa-arrow-circle-left"></i> Cancelar
       </a>
-      <!-- Outros botões ou elementos aqui -->
-  </div>
-  
+    </div>
   </body>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </html>

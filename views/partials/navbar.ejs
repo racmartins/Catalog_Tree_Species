@@ -10,36 +10,50 @@
 <link rel="stylesheet" href="/css/navbar.css" />
 
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom">
-  <div class="container-fluid">
-    <a class="navbar-brand ms-3" href="/">
-      <img src="/img/logo.png" alt="Logo" style="height: 30px" /> ESAS TREE
-    </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon">
-        <i class="fas fa-bars" style="color: white;"></i> <!-- Font Awesome icon -->
-      </span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+  <div class="container flex-column">
+    <!-- Primeira Linha -->
+    <div class="d-flex w-100 justify-content-between align-items-center area1">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/img/logo.jpg" alt="Logo" style="height: 50px" />
+        <span class="ms-2">Jardins da ESAS</span>
+      </a>
+      <div class="login-register d-flex align-items-center">
+        <% if (locals.user) { %>
+        <span class="navbar-text me-3">Olá, <%= locals.user.username %>!</span>
+        <a href="/users/logout" class="btn btn-outline-light"
+          ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+        >
+        <% } else { %>
+        <a href="/users/login" class="btn btn-outline-light me-2"
+          ><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a
+        >
+        <a href="/users/register" class="btn btn-outline-light"
+          ><i class="fa-solid fa-user-plus"></i> Registo</a
+        >
+        <% } %>
+      </div>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <!-- Segunda Linha -->
+    <div class="collapse navbar-collapse w-100 area2" id="navbarNav">
       <ul class="navbar-nav me-auto">
-        <!-- Link Home -->
         <li class="nav-item">
           <a
             class="nav-link <%= activePage === 'homepage' ? 'active' : '' %>"
             href="/"
+            ><i class="fa-solid fa-house"></i> Home</a
           >
-            <i class="fa-solid fa-house"></i> Home
-          </a>
         </li>
-
-        <!-- Link Jardins Dropdown -->
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle <%= activePage.includes('gardens') ? 'active' : '' %>"
@@ -48,71 +62,88 @@
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
+            ><i class="fa-solid fa-seedling"></i> Jardins</a
           >
-            <i class="fa-solid fa-seedling"></i> Jardins
-          </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li>
-              <a class="dropdown-item" href="/gardens">
-                <i class="fa-solid fa-eye"></i> Ver Jardins
-              </a>
+              <a class="dropdown-item" href="/gardens"
+                ><i class="fa-solid fa-eye"></i> Ver Jardins</a
+              >
             </li>
             <% if (isAdmin) { %>
             <li>
-              <a class="dropdown-item" href="/gardens/manage">
-                <i class="fa-solid fa-tools"></i> Gerir Jardim
-              </a>
+              <a class="dropdown-item" href="/gardens/manage"
+                ><i class="fa-solid fa-tools"></i> Gerir Jardim</a
+              >
             </li>
             <% } %>
           </ul>
         </li>
-
-        <!-- Link Árvores -->
         <li class="nav-item">
           <a
             class="nav-link <%= activePage === 'species' ? 'active' : '' %>"
             href="/species"
+            ><i class="fa-solid fa-tree"></i> Árvores</a
           >
-            <i class="fa-solid fa-tree"></i> Árvores
-          </a>
         </li>
-
-        <!-- Link Vídeos -->
         <li class="nav-item">
           <a
             class="nav-link <%= activePage === 'videos' ? 'active' : '' %>"
             href="/videos"
+            ><i class="fa-solid fa-video"></i> Vídeos</a
           >
-            <i class="fa-solid fa-video"></i> Vídeos
-          </a>
         </li>
-
-        <!-- Pontos de Interesse Link -->
         <li class="nav-item">
           <a
             class="nav-link <%= activePage === 'points-of-interest' ? 'active' : '' %>"
             href="/points-of-interest"
+            ><i class="fa-solid fa-map-location-dot"></i> Pontos de Interesse</a
           >
-            <i class="fa-solid fa-map-location-dot"></i> Pontos de Interesse
-          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle <%= activePage.includes('gardens') ? 'active' : '' %>"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            ><i class="fa-solid fa-book"></i> História</a
+          >
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" href="/gardens"
+                ><i class="fa-solid fa-leaf"></i> Projeto Crescer com as
+                Árvores</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="/gardens/manage"
+                ><i class="fa-solid fa-arrow-circle-right"></i> Clube de
+                Micologia</a
+              >
+            </li>
+          </ul>
         </li>
       </ul>
-
-      <div class="d-flex">
-        <% if (locals.user) { %>
-        <span class="navbar-text me-3">Olá, <%= locals.user.username %>!</span>
-        <a href="/users/logout" class="btn btn-outline-light">
-          <i class="fa-solid fa-right-from-bracket"></i> Logout
-        </a>
-        <% } else { %>
-        <a href="/users/login" class="btn btn-outline-light me-2">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-        </a>
-        <a href="/users/register" class="btn btn-outline-light">
-          <i class="fa-solid fa-user-plus"></i> Registo
-        </a>
-        <% } %>
-      </div>
     </div>
   </div>
 </nav>
+<script>
+  // JavaScript para manusear o efeito hover sobre a dropdowns
+  document.addEventListener("DOMContentLoaded", function () {
+    var dropdowns = document.querySelectorAll(".nav-item.dropdown");
+
+    dropdowns.forEach(function (dropdown) {
+      dropdown.addEventListener("mouseover", function () {
+        var menu = dropdown.querySelector(".dropdown-menu");
+        menu.classList.add("show");
+      });
+
+      dropdown.addEventListener("mouseout", function () {
+        var menu = dropdown.querySelector(".dropdown-menu");
+        menu.classList.remove("show");
+      });
+    });
+  });
+</script>

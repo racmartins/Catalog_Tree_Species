@@ -1,53 +1,130 @@
-/* Personalização da Navbar */
+/* Navbar Personalizada */
 .navbar-custom {
-  background-color: #981718; /* Vermelho escuro substitui o verde */
-  border-bottom: 3px solid #9e2324; /* Borda inferior vermelha mais clara */
+  background-color: #8b0000;
+  font-family: "Arial", sans-serif;
+  flex-direction: column;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
-.navbar-brand img {
-  height: 30px; /* Altura do logo */
+
+/* Area 1 */
+.area1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px;
+  width: 100%;
 }
-/* Estilização dos itens da navbar */
-.nav-item .nav-link {
-  color: #ffffff; /* Branco para os itens do link */
+
+.area1 .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
 }
-.nav-item .nav-link:hover,
-.nav-item .nav-link:focus {
-  background-color: #9e2324; /* Vermelho ligeiramente mais claro para hover/focus */
+
+.area1 .navbar-brand img {
+  height: 40px;
+  margin-right: 10px;
 }
-/* Dropdown Menu */
-.dropdown-menu {
-  background-color: #981718; /* Vermelho escuro para o fundo do dropdown */
-}
-.dropdown-item {
-  color: #ffffff; /* Branco para os itens do dropdown */
-}
-.navbar-custom .dropdown-item:hover,
-.navbar-custom .dropdown-item:focus {
-  background-color: #9e2324; /* Vermelho ligeiramente mais claro para hover/focus no dropdown */
-  color: #ffffff; /* Mantém o texto branco */
-}
+
 .login-register {
   display: flex;
-  gap: 20px; /* Espaçamento entre Login e Registo */
-  margin-right: 20px; /* Afasta do canto superior direito */
+  align-items: center;
+  gap: 10px; /* gap default */
 }
-/* Links de autenticação */
-.login-register .nav-link {
-  color: #ffffff; /* Branco para os textos de login e registro */
+
+.login-register .btn {
+  color: #fff;
+  border-color: #fff;
+  font-size: 1rem; /* tamanho de fonte Default */
+  padding: 8px 12px; /* padding default */
 }
-.login-register .nav-link:hover {
-  color: #ede7da; /* Bege claro para hover */
+
+.login-register .btn:hover {
+  background-color: #b22222;
+  border-color: #b22222;
 }
-/* Toggler Icon */
-.navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.1); /* Borda mais clara */
+
+/* Area 2 */
+.area2 {
+  background-color: #f5f5dc;
+  padding: 10px 20px;
+  border-top: 1px solid #8b0000;
+  width: 100%;
 }
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,..."); /* Caminho para o ícone personalizado */
+
+/* Adiciona padding e centra a navbar */
+.navbar-nav .nav-item .nav-link {
+  color: #8b0000;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-right: 15px;
 }
-/* Ajustes responsivos */
-@media (max-width: 991px) {
-  .navbar-collapse {
-    background-color: #981718; /* Vermelho escuro para menus colapsados */
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #b22222;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  background-color: #f5f5dc;
+  border: 1px solid #b22222;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.dropdown-item {
+  color: #8b0000;
+  font-size: 1rem;
+  padding: 8px 12px;
+}
+
+.dropdown-item:hover {
+  background-color: #b22222;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.dropdown-item.active {
+  background-color: #b22222;
+  color: #fff;
+}
+
+/* Estilo para barra ativa */
+.navbar-nav .nav-item .nav-link.active {
+  border-bottom: 3px solid #b22222; /* Red bar under active item */
+  color: #b22222; /* Adjust the text color if needed */
+}
+
+/* Ajuste ao estado do hover */
+.navbar-nav .nav-item .nav-link:hover {
+  border-bottom: 3px solid #b22222; /* barra vermelha sobre o item */
+  color: #b22222; /* Ajusta se necessário a cor do texto */
+}
+
+/* Ajustes Responsivos */
+@media (max-width: 768px) {
+  .area1 .navbar-brand {
+    font-size: 1.1rem; /* Tamanho de fonte menor para titulo de logo */
+  }
+
+  .area1 .navbar-brand img {
+    height: 30px; /* Altura menor */
+    margin-right: 5px; /* Espaço reduzido */
+  }
+
+  .login-register .btn {
+    font-size: 0.7rem; /* Tamanho de fonte menor para o texto nos botões */
+    padding: 4px 6px; /* padding reduzido */
+  }
+
+  .login-register {
+    gap: 4px; /* gap menor entre os botões */
+  }
+
+  .navbar-nav .nav-item .nav-link {
+    font-size: 0.8rem; /* Tamanho de fonte menor para o nav links */
+    margin-right: 10px; /* margens reduzidas */
   }
 }
